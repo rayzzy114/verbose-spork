@@ -341,6 +341,9 @@ function $b(i) {
     }
 }
 
+function formatWinNumber(i) {
+    return i.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+}
 function Gs(i) {
     const t = ve();
     return `${i.toLocaleString(t.locale,{minimumFractionDigits:2,maximumFractionDigits:2})} ${t.currencyCode}`
@@ -638,7 +641,7 @@ class jb {
                 fill: "#d1cbc4",
                 letterSpacing: .25
             }
-        }), this.cashOutAmount.anchor.set(.5), this.cashOutAmount.y = u.height * .08, this.cashOutGroup.addChild(u, d, f, this.cashOutAmount), this.cashOutGroup.eventMode = "none", this.cashOutGroup.cursor = "pointer", this.cashOutGroup.on("pointertap", v => {
+        }), this.cashOutAmount.anchor.set(.5), this.cashOutAmount.y = u.height * .08, this.cashOutGroup.addChild(u, d, f, this.cashOutAmount), this.cashOutGroup.eventMode = "static", this.cashOutGroup.cursor = "pointer", this.cashOutGroup.on("pointertap", v => {
             v.stopPropagation(), this.isBigWinActive && this.dismissBigWinEffects()
         });
         const p = new D,
@@ -1189,7 +1192,7 @@ class jb {
             n = ((os.top + os.bottom) / 2 - this.wheelBase.texture.height / 2) * s;
         this.wheelBase.scale.set(s), this.wheelBase.position.set(-r, -n), e.addChild(this.wheelBase), this.createWheelLabels(e, this.getWheelVisualRadius()), this.wheelCenter = new Q(this.textures["wheel/centr wheel.webp"]), this.wheelCenter.anchor.set(.5, .5);
         const o = this.getWheelVisualRadius() * .72 / this.wheelCenter.texture.width;
-        return this.wheelCenter.scale.set(o), this.wheelSpinner.addChild(e, this.wheelCenter), this.wheelRim = new Q(this.textures["wheel/obod top.webp"]), this.wheelRim.anchor.set(.5, .5), this.wheelRim.scale.set(s), this.wheelRim.position.set(-r, -n), t.addChild(this.wheelSpinner, this.wheelRim), t
+        return this.wheelCenter.scale.set(o), this.wheelSpinner.addChild(e), t.addChild(this.wheelCenter), this.wheelRim = new Q(this.textures["wheel/obod top.webp"]), this.wheelRim.anchor.set(.5, .5), this.wheelRim.scale.set(s), this.wheelRim.position.set(-r, -n), t.addChild(this.wheelSpinner, this.wheelRim), t
     }
     getWheelRigOffscreenY() {
         return -(this.getWheelTargetY() + this.getWheelVisualRadius() + 60)
@@ -1234,9 +1237,7 @@ class jb {
             children: !0
         }), this.bigWinGroup = null, (s = this.bigWinFxGroup) == null || s.destroy({
             children: !0
-        }), this.bigWinFxGroup = null, this.bigWinArrow = null, this.bigWinArrowTicker = null, this.wheelChainSpanOverride = null, this.wheelChainSprite && (this.wheelChainSprite.visible = !1), this.bigWinOverlay && ((this.shakeLayer ?? this.root).addChild(this.bigWinOverlay), await st(this.app, this.bigWinOverlay, {
-            alpha: .82
-        }, .3, Mt)), await this.playPhoneAnimation(), await this.showEndScreen()
+        }), this.bigWinFxGroup = null, this.bigWinArrow = null, this.bigWinArrowTicker = null, this.wheelChainSpanOverride = null, this.wheelChainSprite && (this.wheelChainSprite.visible = !1), await this.playPhoneAnimation(), await this.showEndScreen()
     }
     pickWeightedSector() {
         return ns.find(t => t.name === "x7") ?? ns[0]
@@ -1345,7 +1346,7 @@ class jb {
                     g += this.app.ticker.deltaMS / 1e3;
                     const b = Math.min(g / _, 1),
                         y = Math.round(h + (l - h) * Mt(b));
-                    c.text = `${y.toLocaleString(ve().locale)} ${ve().currencySymbol}`, this.cashOutAmount && (this.cashOutAmount.text = Gs(y)), this.setCashOutGoldProgress((y - wh) / (l - wh)), b >= 1 && (c.text = `12 080 ${ve().currencySymbol}`, this.cashOutAmount && (this.cashOutAmount.text = Gs(l)), this.setCashOutGoldProgress(1), this.removeTicker(x), m())
+                    c.text = `${formatWinNumber(y)} ${ve().currencySymbol}`, this.cashOutAmount && (this.cashOutAmount.text = Gs(y)), this.setCashOutGoldProgress((y - wh) / (l - wh)), b >= 1 && (c.text = `12 080 ${ve().currencySymbol}`, this.cashOutAmount && (this.cashOutAmount.text = Gs(l)), this.setCashOutGoldProgress(1), this.removeTicker(x), m())
                 };
             this.addTicker(x)
         }), this.state.cashOut = l, this.updateCashOut(), this.buildButton.eventMode = "none", this.cashOutGroup && await st(this.app, this.cashOutGroup, {
@@ -1447,9 +1448,6 @@ class jb {
             }
         });
         o.anchor.set(.5), o.position.set(0, s + e.height * .17), t.addChild(o);
-        const a = Dr(.65),
-            h = s + e.height * .52;
-        a.position.set(0, h), t.addChild(a);
         const l = new D,
             c = new Q(this.textures["but build.webp"]);
         c.anchor.set(.5), c.height = J * .12, c.scale.x = c.scale.y;
@@ -1477,11 +1475,7 @@ class jb {
             y: 0
         }, .7, kt), await st(this.app, l, {
             alpha: 1
-        }, .3, Mt), be(this.app, 2).then(() => st(this.app, a, {
-            alpha: 0
-        }, .4, Mt).then(() => {
-            a.destroyed || a.destroy()
-        }));
+        }, .3, Mt);
         let d = 0;
         const f = () => {
             d += this.app.ticker.deltaMS / 1e3;
