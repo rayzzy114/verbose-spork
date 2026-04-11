@@ -2,6 +2,7 @@ import {
     resolveDropStartFromSwingPose,
     resolveTransferredBlockEntryPose
 } from "./drop-start-position.js";
+import { runPostBigWinTransition } from "./end-screen-transition.js";
 
 const ub = "DE",
     Ju = {
@@ -1237,7 +1238,9 @@ class jb {
             children: !0
         }), this.bigWinGroup = null, (s = this.bigWinFxGroup) == null || s.destroy({
             children: !0
-        }), this.bigWinFxGroup = null, this.bigWinArrow = null, this.bigWinArrowTicker = null, this.wheelChainSpanOverride = null, this.wheelChainSprite && (this.wheelChainSprite.visible = !1), await this.playPhoneAnimation(), await this.showEndScreen()
+        }), this.bigWinFxGroup = null, this.bigWinArrow = null, this.bigWinArrowTicker = null, this.wheelChainSpanOverride = null, this.wheelChainSprite && (this.wheelChainSprite.visible = !1), await runPostBigWinTransition({
+            showEndScreen: () => this.showEndScreen()
+        })
     }
     pickWeightedSector() {
         return ns.find(t => t.name === "x7") ?? ns[0]

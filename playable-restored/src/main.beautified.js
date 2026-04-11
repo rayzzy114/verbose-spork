@@ -3,6 +3,7 @@ import {
     resolveDropStartFromSwingPose,
     resolveTransferredBlockEntryPose
 } from "./drop-start-position.js";
+import { runPostBigWinTransition } from "./end-screen-transition.js";
 
 var sd = Object.defineProperty;
 var id = (i, t, e) => t in i ? sd(i, t, {
@@ -23363,11 +23364,7 @@ class jb {
                 letterSpacing: .25
             }
         }), this.cashOutAmount.anchor.set(.5), this.cashOutAmount.y = u.height * .08, this.cashOutGroup.addChild(u, d, f, this.cashOutAmount), this.cashOutGroup.eventMode = "static", this.cashOutGroup.cursor = "pointer", this.cashOutGroup.on("pointertap", v => {
-            v.stopPropagation(), this.isBigWinActive && this.dismissBigWinEffects().then(() => {
-                this.playPhoneAnimation().then(() => {
-                    this.showEndScreen()
-                })
-            })
+            v.stopPropagation(), this.isBigWinActive && this.dismissBigWinEffects()
         });
         const p = new D,
             m = new Q(this.textures["but build.webp"]);
@@ -23978,7 +23975,9 @@ class jb {
             children: !0
         }), this.bigWinGroup = null, (s = this.bigWinFxGroup) == null || s.destroy({
             children: !0
-        }), this.bigWinFxGroup = null, this.bigWinArrow = null, this.bigWinArrowTicker = null, this.wheelChainSpanOverride = null, this.wheelChainSprite && (this.wheelChainSprite.visible = !1), await this.playPhoneAnimation(), await this.showEndScreen()
+        }), this.bigWinFxGroup = null, this.bigWinArrow = null, this.bigWinArrowTicker = null, this.wheelChainSpanOverride = null, this.wheelChainSprite && (this.wheelChainSprite.visible = !1), await runPostBigWinTransition({
+            showEndScreen: () => this.showEndScreen()
+        })
     }
     pickWeightedSector() {
         return ns.find(t => t.name === "x7") ?? ns[0]
