@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>Tower Rush Playable</title>
+    <script>
+      // MRAID stub for single-file playable
+      (function() {
+        if (typeof window.mraid !== 'undefined') return;
+        window.mraid = {
+          getState: function() { return 'default'; },
+          addEventListener: function(event, handler) {
+            if (event === 'ready') setTimeout(handler, 0);
+          },
+          removeEventListener: function() {},
+          open: function(url) {
+            if (url) window.open(url, '_blank');
+          },
+          close: function() {},
+          useCustomClose: function() {},
+          expand: function() {},
+          isViewable: function() { return true; }
+        };
+      })();
+    </script>
+    <script>
+      // === IronSource dapi click & redirect ===
+      window.clickUrl = "";
+      window.openStore = function () {
+        if (typeof dapi !== "undefined" && dapi.openStoreUrl) {
+          dapi.openStoreUrl();
+        } else if (typeof mraid !== "undefined" && mraid.open) {
+          mraid.open(window.clickUrl);
+        } else if (window.clickUrl) {
+          window.open(window.clickUrl, "_blank");
+        }
+      };
+
+      // === SDK readiness gate ===
+      window.__adReady = false;
+      (function () {
+        function onReady() {
+          window.__adReady = true;
+          if (window.__startApp) window.__startApp();
+        }
+        if (typeof dapi !== "undefined") {
+          if (dapi.isReady()) onReady();
+          else dapi.addEventListener("ready", onReady);
+        } else if (typeof mraid !== "undefined") {
+          if (mraid.getState() === "ready" || mraid.getState() === "default") onReady();
+          else mraid.addEventListener("ready", onReady);
+        } else {
+          onReady();
+        }
+      })();
+    </script>
+    <style>
+      :root {
+        color-scheme: dark;
+        background: #090705;
+        font-family: Trajan Pro, serif;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #090705;
+      }
+      #app {
+        width: 100%;
+        height: 100%;
+      }
+      #disclaimer {
+        position: fixed;
+        bottom: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.3);
+        pointer-events: none;
+        z-index: 9999;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="disclaimer">For illustrative purposes only</div>
+    <script type="module" src="/src/main.beautified.js"></script>
+  </body>
+</html>
